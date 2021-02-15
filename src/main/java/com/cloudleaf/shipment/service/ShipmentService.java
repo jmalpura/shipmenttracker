@@ -1,13 +1,14 @@
 package com.cloudleaf.shipment.service;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
 import com.cloudleaf.shipment.entity.Shipment;
 import com.cloudleaf.shipment.util.ShipmentException;
 import com.cloudleaf.shipment.util.ShipmetStorage;
 import com.cloudleaf.tracking.aftership.entity.Tracking;
+
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Service class that provides the implementation to create and fetch status Shipment request.
@@ -15,8 +16,8 @@ import com.cloudleaf.tracking.aftership.entity.Tracking;
  *
  */
 @Service
+@Log4j2
 public class ShipmentService {
-    private static final Logger logger = LogManager.getLogger(ShipmentService.class);
 
 
 	@Qualifier("afterShipTrackingService")
@@ -35,7 +36,7 @@ public class ShipmentService {
 	public Shipment createShipment(Shipment shipment) {
 
 		if (ShipmetStorage.getShipmet(shipment.getTrackingNumber()) != null) {
-			logger.info("Shipment id alredy exists "+ shipment.getTrackingNumber());
+			log.info("Shipment id alredy exists "+ shipment.getTrackingNumber());
 			throw new ShipmentException("Given Tracking Number is already exists " + shipment.getTrackingNumber());
 		}
 
@@ -57,7 +58,7 @@ public class ShipmentService {
 
 		Shipment shipment = ShipmetStorage.getShipmet(id);
 		if (shipment == null) {
-			logger.info("Shipment id not found "+ id);
+			log.info("Shipment id not found "+ id);
 			throw new ShipmentException("Given Shipement Id or Tracking Number not found " + id);
 		}
 		Tracking tracking = trackingService.getTracking(id);

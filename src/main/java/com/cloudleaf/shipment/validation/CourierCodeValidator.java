@@ -1,19 +1,16 @@
 package com.cloudleaf.shipment.validation;
 
 import java.util.Arrays;
-import java.util.List;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import com.cloudleaf.shipment.util.CourierCodes;
+
 public class CourierCodeValidator implements ConstraintValidator<CourierCode, String> {
-
-	List<String> courierCodes = Arrays.asList("FedEx", "UPS", "USPS");
-
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-
-		return courierCodes.contains(value);
-
+		return Arrays.stream(CourierCodes.values()).anyMatch((t) -> t.name().equals(value));
+		
 	}
 }

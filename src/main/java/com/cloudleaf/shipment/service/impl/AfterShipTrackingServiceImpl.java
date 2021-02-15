@@ -1,9 +1,7 @@
-package com.cloudleaf.shipment.service;
+package com.cloudleaf.shipment.service.impl;
 
 import java.net.URI;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.cloudleaf.shipment.entity.Shipment;
+import com.cloudleaf.shipment.service.TrackingService;
 import com.cloudleaf.shipment.util.ShipmentException;
 import com.cloudleaf.tracking.aftership.entity.AfterShipTrackingResponse;
 import com.cloudleaf.tracking.aftership.entity.Tracking;
@@ -26,10 +25,12 @@ import com.cloudleaf.tracking.aftership.entity.TrackingRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.log4j.Log4j2;
+
 @Service
 @Qualifier("afterShipTrackingService")
-public class AfterShipTrackingService implements TrackingService {
-    private static final Logger logger = LogManager.getLogger(AfterShipTrackingService.class);
+@Log4j2
+public class AfterShipTrackingServiceImpl implements TrackingService {
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -58,7 +59,7 @@ public class AfterShipTrackingService implements TrackingService {
 		TrackingRequest trackingReuest = new TrackingRequest();
 		trackingReuest.setTracking(tracking);
 		
-		logger.info("trackingReuest to save "+trackingReuest);
+		log.info("trackingReuest to save "+trackingReuest);
 
 		HttpEntity<TrackingRequest> entity = new HttpEntity<>(trackingReuest, headers);
 		try {
@@ -69,11 +70,11 @@ public class AfterShipTrackingService implements TrackingService {
 				return afterShipTrackingResponse.getData().getTracking().getId();
 
 			} else {
-				logger.error("Trqcking Response status is not Create tracking Nunber"+shipment.getTrackingNumber());
+				log.error("Trqcking Response status is not Create tracking Nunber"+shipment.getTrackingNumber());
 				throw new ShipmentException("Failed to Save Tracking Id");
 			}
 		} catch (HttpClientErrorException clientErrorException) {
-			logger.error("Trqcking Errored "+shipment.getTrackingNumber());
+			log.error("Trqcking Errored "+shipment.getTrackingNumber());
 			
 			String errorResponse = clientErrorException.getResponseBodyAsString();
 			ObjectMapper om = new ObjectMapper();

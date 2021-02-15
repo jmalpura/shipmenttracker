@@ -7,8 +7,6 @@ import org.jsondoc.core.annotation.ApiAuthNone;
 import org.jsondoc.core.annotation.ApiMethod;
 import org.jsondoc.core.annotation.ApiPathParam;
 import org.jsondoc.core.annotation.ApiVersion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cloudleaf.shipment.entity.Shipment;
 import com.cloudleaf.shipment.service.ShipmentService;
 
+import lombok.extern.log4j.Log4j2;
+
 @Api(name = "Shipment API", description = "Shipment Service is provided by Cloudleaf and IT provides APIs to create "
 		+ "new Shipment and Tracking the status of Shipment")
 @ApiVersion(since = "1.0")
@@ -31,8 +31,8 @@ import com.cloudleaf.shipment.service.ShipmentService;
 @RestController
 @RequestMapping("/shipment")
 @Validated
+@Log4j2
 public class ShipmentController {
-	public static final Logger logger = LoggerFactory.getLogger(ShipmentController.class);
 
 	private final ShipmentService shipmentService;
 
@@ -52,7 +52,7 @@ public class ShipmentController {
 	@ApiMethod(description = "Get Shipment status retuns Shipment status for givnen Tracking Number or AfterShip Id")
 	@GetMapping("{id}")
 	public ResponseEntity<Shipment> getShipmentStatus(@ApiPathParam(description = "Tracking Number or AfterShip Id") @PathVariable("id") String id) throws Exception {
-		logger.info("Get Shipment : {}", id);
+		log.info("Get Shipment : {}", id);
 		return new ResponseEntity<>(shipmentService.getShipmentStatus(id), HttpStatus.OK);
 	}
 

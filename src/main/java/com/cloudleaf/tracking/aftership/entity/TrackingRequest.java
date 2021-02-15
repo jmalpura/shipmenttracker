@@ -1,15 +1,12 @@
 package com.cloudleaf.tracking.aftership.entity;
 
+
+import lombok.Data;
+
+@Data
 public class TrackingRequest {
 
 	private Tracking tracking;
 
-	public Tracking getTracking() {
-		return tracking;
-	}
-
-	public void setTracking(Tracking tracking) {
-		this.tracking = tracking;
-	}
 
 }
